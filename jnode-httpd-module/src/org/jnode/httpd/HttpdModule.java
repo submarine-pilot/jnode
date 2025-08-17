@@ -156,7 +156,7 @@ public class HttpdModule extends JnodeModule {
 		if (linkreg) {
 			app.get("/become-link", new BecomeLinkRoute(true));
 			app.get("/requestlink.html", new BecomeLinkRoute(true));
-			app.post("/link-request", new LinkRequestRoute());
+			app.post("/link-request/{type}", new LinkRequestRoute());
 		} else {
 			app.get("/become-link", new BecomeLinkRoute(false));
 			app.get("/requestlink.html", new BecomeLinkRoute(false));
@@ -209,7 +209,7 @@ public class HttpdModule extends JnodeModule {
 		app.post("/secure/routing", new RoutingRoute());
 		app.post("/secure/rewrite", new RewriteRoute());
 		app.post("/secure/netmail-accept-rule", new NetmailAcceptRuleRoute());
-		app.post("/secure/user", new UserRoute());
+		app.post("/secure/user/{action}", new UserRoute());
 		app.post("/secure/script_save.html", new ScriptSaveRoute());
 		app.post("/secure/helper_add.html", new HelperAddRoute());
 		app.post("/secure/schedule_add.html", new ScheduleAddRoute());
