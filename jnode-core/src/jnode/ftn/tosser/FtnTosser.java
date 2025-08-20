@@ -614,8 +614,9 @@ public class FtnTosser {
 						File attach = FtnTools.guessFilename(filename, true);
 						if (attach != null && attach.canRead()) { // processing
 							logger.l3("File found as " + filename);
-							if (!MainHandler.getCurrentInstance().getInfo()
-									.getAddressList().contains(tic.getTo())) {
+							FtnAddress toAddr = tic.getTo();
+							if (toAddr != null && !MainHandler.getCurrentInstance().getInfo()
+									.getAddressList().contains(toAddr)) {
 								markAsBad(file, "Destination mismatch");
 								continue;
 							}

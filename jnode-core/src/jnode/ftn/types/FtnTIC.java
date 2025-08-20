@@ -107,7 +107,8 @@ public class FtnTIC {
 			writer.write("Desc " + desc + "\r\n");
 		}
 		writer.write("From " + from + "\r\n");
-		writer.write("To " + to + "\r\n");
+		if (to != null)
+			writer.write("To " + to + "\r\n");
 		writer.write("Origin " + origin + "\r\n");
 		writer.write("Size " + size + "\r\n");
 		writer.write(String.format("CRC %08x\r\n", crc32).toUpperCase());
