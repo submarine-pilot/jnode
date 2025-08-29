@@ -38,9 +38,11 @@ public class Message {
 	private boolean secure = true;
 	private Long unixtime = new Date().getTime() / 1000L;
 	private File file;
+	private int tag;
 
 	public Message(File file) throws IOException {
 		super();
+		this.tag = 0;
 		this.file = file;
 		messageName = file.getName();
 		messageLength = file.length();
@@ -49,6 +51,7 @@ public class Message {
 
 	public Message(String name, long len) {
 		super();
+		this.tag = 0;
 		this.messageName = name;
 		this.messageLength = len;
 	}
@@ -114,5 +117,13 @@ public class Message {
         sb.append(", unixtime=").append(unixtime);
         sb.append('}');
         return sb.toString();
+    }
+
+    public int getTag() {
+        return tag;
+    }
+
+    public void setTag(int aTag) {
+        tag = aTag;
     }
 }

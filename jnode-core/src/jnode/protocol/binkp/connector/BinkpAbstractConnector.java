@@ -129,7 +129,6 @@ public abstract class BinkpAbstractConnector implements Runnable {
 	// current messages 'to send' before EOF
 	protected ArrayList<Message> messages = new ArrayList<>();
 	protected InputStream currentInputStream;
-	protected int messages_index = 0;
 	// protected transferringMessage = null;
 	private Message receivingMessage = null;
 	private File currentFile;
@@ -755,7 +754,6 @@ public abstract class BinkpAbstractConnector implements Runnable {
 			}
 		} else {
 			logger.l4("[STATE:" + getStateString() + "] Found " + messages.size() + " messages to send");
-			messages_index = 0;
 			startNextFile();
 		}
 	}
@@ -859,7 +857,6 @@ public abstract class BinkpAbstractConnector implements Runnable {
 					logger.l5("EOF reached (n=" + n + "), closing input stream");
 					currentInputStream.close();
 					currentInputStream = null;
-					messages_index++;
 					if (startNextFile()) {
 						logger.l5("Started next file, recursing");
 						return readFrame();
@@ -876,17 +873,17 @@ public abstract class BinkpAbstractConnector implements Runnable {
 	}
 
 	protected boolean startNextFile() {
-		logger.l5("[STATE:" + getStateString() + "] startNextFile() called, messages_index=" + messages_index + 
-			", messages.size=" + messages.size());
-		try {
-			Message nextMessage = messages.get(messages_index);
-			logger.l4("[STATE:" + getStateString() + "] Starting file: " + nextMessage.getMessageName());
-			sendMessage(nextMessage, 0);
-			return true;
-		} catch (IndexOutOfBoundsException e) {
-			logger.l5("[STATE:" + getStateString() + "] No more files to send");
-			return false;
-		}
+		logger.l5("[STATE:" + getStateString() + "] startNextFile() called, messages.size=" + messages.size());
+		for (Message nextMessage : messages)
+			if (nextMessage.getTag() == 0)
+			{
+				logger.l4("[STATE:" + getStateString() + "] Starting file: " + nextMessage.getMessageName());
+				nextMessage.setTag(1);
+				sendMessage(nextMessage, 0);
+				return true;
+			}
+		logger.l5("[STATE:" + getStateString() + "] No more files to send");
+		return false;
 	}
 
 	protected void sendMessage(Message message, int skip) {
