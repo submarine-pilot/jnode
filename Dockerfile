@@ -1,3 +1,19 @@
+#
+# Build stage
+#
+
+FROM maven:3.9.9-eclipse-temurin-21 as builder
+
+WORKDIR /app
+
+COPY . /app/
+
+RUN mvn clean package -Pdocker
+
+#
+# Deploy stage
+#
+
 FROM openjdk:21-jdk-slim
 
 RUN useradd -ms /bin/bash appuser && \
@@ -9,7 +25,7 @@ WORKDIR /app
 
 USER appuser
 
-COPY --chown=appuser:appuser jnode-assembly/target/jnode-2.0.7-docker.dir /app/
+COPY --from=builder --chown=appuser:appuser /app/jnode-assembly/target/jnode-2.0.7-docker.dir /app/
 
 RUN chmod +x /app/entrypoint.sh
 
