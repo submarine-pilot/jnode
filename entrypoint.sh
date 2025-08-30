@@ -16,7 +16,7 @@ fi
 [ -d "/data/tmp" ] || mkdir -p "/data/tmp"
 [ -d "/data/www" ] || mkdir -p "/data/www"
 
-java -Xms128m -Xmx512m -server \
+exec java -Xms128m -Xmx512m -server \
     -Djava.awt.headless=true \
     -Dfile.encoding=UTF-8 \
     -Djava.net.preferIPv6Addresses=false \
