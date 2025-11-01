@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -1383,6 +1384,40 @@ public final class FtnTools {
 		}
 	}
 
+    private static void autoSubscribeToNewEchoArea(Echoarea echoArea)
+    {
+        List<Link> links = ORMManager.get(Link.class).getAll();
+
+        for (Link link : links)
+            try
+            {
+                String regExp = getOptionString(link, LinkOption.REGEXP_AUTOSUBSCRIBE_AREA);
+
+                if (regExp.isEmpty())
+                    continue;
+
+                Pattern areaExp = Pattern.compile(regExp, Pattern.CASE_INSENSITIVE);
+
+                if (areaExp.matcher(echoArea.getName()).find())
+                {
+                    Subscription sub = new Subscription();
+
+                    sub.setArea(echoArea);
+                    sub.setLink(link);
+                    ORMManager.get(Subscription.class).save(sub);
+                    logger.l3("Link " + link.getLinkName() + " automatically subscribed to echo area " + echoArea.getName());
+                }
+            }
+            catch (PatternSyntaxException e)
+            {
+                // Just ignoring pattern errors
+            }
+            catch (Exception e)
+            {
+                logger.l3("Automatic subscription error for link " + link.getLinkName() + " and echo area " + echoArea.getName() + ": " + e.getMessage());
+            }
+    }
+
 	/**
 	 * Getting and autocreate
 	 * 
@@ -1415,6 +1450,7 @@ public final class FtnTools {
 					sub.setLink(link);
 					ORMManager.get(Subscription.class).save(sub);
 				}
+                autoSubscribeToNewEchoArea(ret);
 				Notifier.INSTANCE.notify(new NewEchoareaEvent(name, link));
 			}
 		} else {
@@ -1451,14 +1487,15 @@ public final class FtnTools {
 				area.setGroup((link != null) ? getOptionString(link, LinkOption.SARRAY_LINK_GROUPS).split(" ")[0] : "");
 				logger.l3("Echoarea " + name.toUpperCase() + " created");
 				ORMManager.get(Echoarea.class).save(area);
-				
+
 				if (link != null) {
 					Subscription sub = new Subscription();
 					sub.setArea(area);
 					sub.setLink(link);
 					ORMManager.get(Subscription.class).save(sub);
 				}
-				Notifier.INSTANCE.notify(new NewEchoareaEvent(name, link));
+                autoSubscribeToNewEchoArea(area);
+                Notifier.INSTANCE.notify(new NewEchoareaEvent(name, link));
 				return EchoareaLookupResult.success(area);
 			} else {
 				// Auto-creation is disabled
@@ -1478,6 +1515,40 @@ public final class FtnTools {
 		}
 	}
 
+    private static void autoSubscribeToNewFileArea(Filearea fileArea)
+    {
+        List<Link> links = ORMManager.get(Link.class).getAll();
+
+        for (Link link : links)
+            try
+            {
+                String regExp = getOptionString(link, LinkOption.REGEXP_AUTOSUBSCRIBE_FILE);
+
+                if (regExp.isEmpty())
+                    continue;
+
+                Pattern fileExp = Pattern.compile(regExp, Pattern.CASE_INSENSITIVE);
+
+                if (fileExp.matcher(fileArea.getName()).find())
+                {
+                    FileSubscription sub = new FileSubscription();
+
+                    sub.setArea(fileArea);
+                    sub.setLink(link);
+                    ORMManager.get(FileSubscription.class).save(sub);
+                    logger.l3("Link " + link.getLinkName() + " automatically subscribed to file area " + fileArea.getName());
+                }
+            }
+            catch (PatternSyntaxException e)
+            {
+                // Just ignoring pattern errors
+            }
+            catch (Exception e)
+            {
+                logger.l3("Automatic subscription error for link " + link.getLinkName() + " and file area " + fileArea.getName() + ": " + e.getMessage());
+            }
+    }
+
 	/**
 	 * Getting and autocreate
 	 * 
@@ -1493,7 +1564,7 @@ public final class FtnTools {
 		if (ret == null) {
 			if (link == null
 					|| getOptionBooleanDefFalse(link,
-							LinkOption.BOOLEAN_AUTOCREATE_AREA)) {
+							LinkOption.BOOLEAN_AUTOCREATE_FILE)) {
 				ret = new Filearea();
 				ret.setName(name);
 				ret.setDescription("Autocreated filearea");
@@ -1511,6 +1582,7 @@ public final class FtnTools {
 					sub.setLink(link);
 					ORMManager.get(FileSubscription.class).save(sub);
 				}
+                autoSubscribeToNewFileArea(ret);
 				Notifier.INSTANCE.notify(new NewFileareaEvent(name, link));
 			}
 		} else {

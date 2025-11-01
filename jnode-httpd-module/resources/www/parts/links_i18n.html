@@ -154,6 +154,13 @@
 							value="true" selected>{{label.yes}}</option>
 						<option value="false">{{label.no}}</option></select></td>
 			</tr>
+            <tr>
+                <th>{{links.auto_subscribe_echoes}}</th>
+                <td><input type="text" id="_opt_areaautosub" name="areaautosub" size="8" /></td>
+                <th>{{links.auto_subscribe_file_echoes}}</th>
+                <td><input type="text" id="_opt_fileautosub" name="fileautosub" size="8" /></td>
+                <td colspan="2">&nbsp;</td>
+            </tr>
 			<tr>
 				<th>{{links.enable_pause}}</th>
 				<td><select id="_opt_pause" name="pause"><option
@@ -217,7 +224,9 @@
 		_value("_opt_crashechomail", "false");
 		_value("_opt_crashfilemail", "false");
 		_value("_opt_areaautocreate", "false");
+		_value("_opt_areaautosub", "");
 		_value("_opt_fileautocreate", "false");
+		_value("_opt_fileautosub", "");
 		_value("_opt_pollbytimeout", "true");
 		_value("_opt_areafix", "true");
 		_value("_opt_filefix", "true");

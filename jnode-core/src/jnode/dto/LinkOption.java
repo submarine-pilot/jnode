@@ -41,7 +41,9 @@ public class LinkOption {
 	public static final String BOOLEAN_CRASH_ECHOMAIL = "crashechomail";
 	public static final String BOOLEAN_CRASH_FILEMAIL = "crashfilemail";
 	public static final String BOOLEAN_AUTOCREATE_AREA = "areaautocreate";
+    public static final String REGEXP_AUTOSUBSCRIBE_AREA = "areaautosub";
 	public static final String BOOLEAN_AUTOCREATE_FILE = "fileautocreate";
+    public static final String REGEXP_AUTOSUBSCRIBE_FILE = "fileautosub";
 	public static final String BOOLEAN_POLL_BY_TIMEOT = "pollbytimeout";
 	public static final String BOOLEAN_AREAFIX = "areafix";
 	public static final String BOOLEAN_FILEFIX = "filefix";
@@ -71,7 +73,9 @@ public class LinkOption {
 		options.put("crashechomail", "-echcrash");
 		options.put("crashfilemail", "-fchcrash");
 		options.put("areaautocreate", "-aacreate");
+        options.put("areaautosub", "-aasub");
 		options.put("fileautocreate", "-facreate");
+        options.put("fileautosub", "-fasub");
 		options.put("pollbytimeout", "-poll");
 		options.put("areafix", "-afix");
 		options.put("filefix", "-ffix");
