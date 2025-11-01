@@ -39,7 +39,7 @@ public class FtnAddress implements Serializable {
 	protected int node;
 	protected int point;
 	public static final Pattern fidonetAddress = Pattern
-			.compile("^(\\d)?:?(\\d{1,5})/(\\d{1,5})\\.?(\\d{1,5})?@?(\\S+)?$");
+			.compile("^(\\d{1,5})?:?(\\d{1,5})/(\\d{1,5})\\.?(\\d{1,5})?@?(\\S+)?$");
 
 	public FtnAddress(String addr) throws NumberFormatException {
 
@@ -57,6 +57,14 @@ public class FtnAddress implements Serializable {
 			} else {
 				point = 0;
 			}
+			if (zone < 1 || zone > 32767)
+				throw new NumberFormatException(addr + " has invalid zone number");
+			if (net < 0 || net > 32767)
+				throw new NumberFormatException(addr + " has invalid network number");
+			if (node < 0 || node > 32767)
+				throw new NumberFormatException(addr + " has invalid node number");
+			if (point < 0 || point > 65535)
+				throw new NumberFormatException(addr + " has invalid point number");
 		} else {
 			throw new NumberFormatException(addr + " is invalid ftn address");
 		}
