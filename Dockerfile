@@ -14,7 +14,7 @@ RUN mvn clean package -Pdocker
 # Deploy stage
 #
 
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21.0.9_10-jre
 
 RUN useradd -ms /bin/bash appuser && \
     apt update && \
